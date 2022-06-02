@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -12,7 +12,7 @@
         <h1>Tenor GIF</h1>
         <hr>
         <input id="input-gif" type="text" placeholder="buscar">
-        <!-- <div id="mesaje"><h2>enter para buscar</h2></div> -->
+        <!-- <div id="mesaje"><h2>enter para buscar</h2></div> 
     </header>
 
     <section>
@@ -43,5 +43,93 @@
     </footer>
 
     <script src="js/main.js"></script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html>
+<script>
+
+// url Async requesting function
+function httpGetAsync(theUrl, callback)
+{
+    // create the request object
+    var xmlHttp = new XMLHttpRequest();
+
+    // set the state change callback to capture when the response comes in
+    xmlHttp.onreadystatechange = function()
+    {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+        {
+            callback(xmlHttp.responseText);
+        }
+    }
+
+    // open as a GET call, pass in the url and set async = True
+    xmlHttp.open("GET", theUrl, true);
+
+    // call send with no params as they were passed in on the url string
+    xmlHttp.send(null);
+
+    return;
+}
+
+// callback for GIF categories
+function tenorCallback_terms(responsetext)
+{
+    // parse the json response
+    var response_objects = JSON.parse(responsetext);
+    console.log(response_objects);
+    terms = response_objects["results"];
+
+    document.getElementById("res").innerHTML = terms
+
+    return;
+}
+
+// function to call the trending terms
+function grab_data()
+{
+    
+    var apikey = "0L3UBB6Z2HFS";
+    var lmt = 2;
+
+    // get the current list of trending terms - using the default locale of en_US
+    var cat_url = "https://g.tenor.com/v1/trending?key=" + apikey;
+
+    httpGetAsync(cat_url,tenorCallback_terms);
+
+    // data will be loaded by each call's callback
+    return;
+}
+
+
+grab_data();
+
+</script>
+<style>
+.container {
+    position: relative;
+    text-align: center;
+    color: rgb(233, 26, 26);
+}
+.title {
+text-align: center;
+}
+.centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+</style>
+
+<body>
+
+<h2 class="title">Trending Terms</h2>
+<div class="container" id="res">
+</div>
+
 </body>
 </html>
